@@ -2,9 +2,13 @@
   "name": "urway.js",
   "version": "1.0.0",
   "description": "Urway node.js sdk",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test specified\"",
     "start:dev": "npx nodemon"
   },
   "author": "Yaser I. Tawash",
