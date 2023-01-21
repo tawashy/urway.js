@@ -4,6 +4,19 @@
   "description": "Urway node.js sdk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "urway",
+    "payment processing",
+    "payment gateway",
+    "credit cards",
+    "api"
+  ],
+  "homepage": "https://github.com/tawashy/urway.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tawashy/urway.js.git"
+  },
+  "bugs": "https://github.com/tawashy/urway.js/issues",
   "files": [
     "/dist"
   ],
@@ -12,7 +25,7 @@
     "start:dev": "npx nodemon"
   },
   "author": "Yaser I. Tawash",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.11.18",
     "nodemon": "^2.0.20",
