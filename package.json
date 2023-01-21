@@ -1,6 +1,6 @@
 {
   "name": "urway.js",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Urway node.js sdk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
