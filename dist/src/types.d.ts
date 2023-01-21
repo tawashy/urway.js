@@ -15,6 +15,12 @@ export interface ProcessPaymentType {
     country: "SA";
     redirectURL: string;
 }
+export interface CheckPaymentStatusType {
+    transid: string;
+    trackid: string;
+    amount: string;
+    hash: string;
+}
 export interface IPayment {
     trackid: string;
     terminalId: string;
