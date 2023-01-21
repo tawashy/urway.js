@@ -8,59 +8,53 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.URWAY = void 0;
-const crypto_1 = require("crypto");
-const status_codes_json_1 = __importDefault(require("./status-codes.json"));
-const constants_1 = require("./constants");
-const api_1 = require("./api");
-const types_1 = require("./types");
+const payment_1 = require("./payment");
+const subscription_1 = require("./subscription");
 class URWAY {
     constructor(config) {
-        this.createPaymentLink = (data) => __awaiter(this, void 0, void 0, function* () {
-            const { redirectURL, trackid, amount, currency, country, customerEmail } = data;
-            // create a hash for the payment
-            const hash = this.creatPaymentHash({ trackid, amount, currency });
-            // construct the payment object
-            const payment = {
-                trackid,
-                terminalId: this.terminalId,
-                password: this.password,
-                action: types_1.TransactionType.Purchase,
-                merchantIp: "10.10.10.10",
-                country,
-                currency,
-                amount,
-                requestHash: hash,
-                customerEmail: customerEmail,
-                udf2: redirectURL,
-            };
-            // call the api endpoint to return the redirect api.
-            const response = yield (0, api_1.api)(this.url, payment);
-            const isFailure = response.result === "Failure";
-            // if there was an error throw the error
-            if (isFailure) {
-                const status = response.responseCode;
-                let message = "unknown error, please check urway docs for more details";
-                if (status_codes_json_1.default[status])
-                    message = status_codes_json_1.default[status];
-                throw new Error(`error code ${status}: - ${message}`);
-            }
-            // else return the redirect url
-            return `${response["targetUrl"]}?paymentid=${response["payid"]}`;
-        });
-        // creates a payment hash string.
-        this.creatPaymentHash = ({ trackid, amount, currency }) => {
-            const txn_details = `${trackid}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
-            return (0, crypto_1.createHash)("sha256").update(txn_details).digest("hex");
-        };
-        this.terminalId = config.terminalId;
-        this.password = config.password;
-        this.url = config.mode === "production" ? constants_1.PRODUCTION_URL : constants_1.TESTING_URL;
-        this.secret = config.secret;
+        this.payment = new payment_1.Payment(config);
+        this.subscription = new subscription_1.Subscription(config);
     }
 }
 exports.URWAY = URWAY;
+const urway = new URWAY({
+    terminalId: "calinda",
+    password: "Urway@123",
+    secret: "935bf48fe601eef3e034584eb5c12c13b9c2c6ba105d052f740c2653e3179b9d",
+});
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    // const payment = await urway.payment.create({
+    //   referenceId: "119",
+    //   amount: "200.00",
+    //   customer: {
+    //     email: "yaser.tawash@gmail.com",
+    //     firstName: "Yaser",
+    //     lastName: "Tawash",
+    //   },
+    //   redirectURL: "http://localhost:3000/callback",
+    // });
+    // console.log(payment);
+    // const check = await urway.payment.check({
+    //   paymentId: "2302118621469666298",
+    //   referenceId: "119",
+    //   amount: "200.00",
+    //   hash: "ac2818dd10567d0d4e4882bf448676626b04c21d7677892f21de13957fc0971c",
+    // });
+    // console.log(check);
+    // const refund = await urway.payment.refund({
+    //   paymentId: "2302118621469666298",
+    //   referenceId: "119",
+    //   amount: "200.00",
+    //   hash: "ac2818dd10567d0d4e4882bf448676626b04c21d7677892f21de13957fc0971c",
+    // });
+    // console.log(refund);
+}))();
+// {
+//   hash: '1efe988a14f0004c65c689db0a957f5aa6b2311676a1d772737bb26b58f27131',
+//   paymentId: '2302016612273928952',
+//   url: 'https://payments-dev.urway-tech.com/URWAYPGService/direct.jsp?paymentid=2302016612273928952'
+// }
+// http://localhost:3000/callback?PaymentId=2301916603583144469&TranId=2301916603583144469&ECI=05&Result=Successful&TrackId=2&AuthCode=237003&ResponseCode=000&RRN=301913237003&responseHash=1da7ec025b619aab50233884ac7d3fe7a30a14fac8a4d2ebd461a8d458640ddc&cardBrand=VISA&amount=200.00&UserField1=&UserField3=&UserField4=&UserField5=&cardToken=&maskedPAN=450875XXXXXX1019&email=&payFor=&SubscriptionId=null&PaymentType=DebitCard&metaData=
+// http://localhost:3000/callback?PaymentId=2302017612359091072&TranId=2302017612359091072&ECI=05&Result=Successful&TrackId=116&AuthCode=234058&ResponseCode=000&RRN=302014234058&responseHash=c7a8f301c74f60e117e881095044feddde1a148427bae4beffe94bf4313f389b&cardBrand=VISA&amount=200.00&UserField1=&UserField3=&UserField4=&UserField5=&cardToken=&maskedPAN=450875XXXXXX1019&email=&payFor=&SubscriptionId=null&PaymentType=DebitCard&metaData=

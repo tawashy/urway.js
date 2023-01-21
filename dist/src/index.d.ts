@@ -1,10 +1,7 @@
-import { ConfigType, ProcessPaymentType } from "./types";
+import { ConfigType } from "./types";
+import { Payment } from "./payment";
 export declare class URWAY {
-    private terminalId;
-    private password;
-    private url;
-    private secret;
+    payment: Payment;
+    private subscription;
     constructor(config: ConfigType);
-    createPaymentLink: (data: ProcessPaymentType) => Promise<string>;
-    private creatPaymentHash;
 }
