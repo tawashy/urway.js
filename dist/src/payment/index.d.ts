@@ -1,5 +1,5 @@
-import { ConfigType } from "../types";
-import { ICreatePaymentData, ICheckPaymentData, IRefundPaymentData } from "./types";
+import type { ConfigType } from "../types";
+import type { ICreatePaymentData, ICheckPaymentData, IRefundPaymentData } from "./types";
 import { Config } from "../config";
 export declare class Payment extends Config {
     constructor(config: ConfigType);
