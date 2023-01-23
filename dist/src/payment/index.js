@@ -8,12 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Payment = void 0;
 const types_1 = require("../types");
 const crypto_1 = require("crypto");
 const api_1 = require("../utils/api");
 const config_1 = require("../config");
+const validateAmount_1 = __importDefault(require("../helper/validateAmount"));
 class Payment extends config_1.Config {
     constructor(config) {
         super(config);
@@ -22,7 +26,9 @@ class Payment extends config_1.Config {
          */
         this.create = (data) => __awaiter(this, void 0, void 0, function* () {
             // create a payment here ...
-            const { redirectURL, referenceId, amount, customer, lang = "EN", udf1, udf4, } = data;
+            const { redirectURL, referenceId, customer, lang = "EN", udf1, udf4, } = data;
+            let { amount } = data;
+            amount = (0, validateAmount_1.default)(amount);
             // create a hash for the payment
             const hash = this.creatPaymentHash({
                 referenceId,
@@ -71,7 +77,9 @@ class Payment extends config_1.Config {
          */
         this.check = (data) => __awaiter(this, void 0, void 0, function* () {
             // check payment here ...
-            const { paymentId, referenceId, amount, hash } = data;
+            const { paymentId, referenceId, hash } = data;
+            let { amount } = data;
+            amount = (0, validateAmount_1.default)(amount);
             const payment = {
                 transid: paymentId,
                 trackid: referenceId,
@@ -94,7 +102,9 @@ class Payment extends config_1.Config {
             };
         });
         this.refund = (data) => __awaiter(this, void 0, void 0, function* () {
-            const { paymentId, referenceId, amount, hash } = data;
+            const { paymentId, referenceId, hash } = data;
+            let { amount } = data;
+            amount = (0, validateAmount_1.default)(amount);
             const payment = {
                 transid: paymentId,
                 trackid: referenceId,
