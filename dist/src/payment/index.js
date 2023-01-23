@@ -99,6 +99,7 @@ class Payment extends config_1.Config {
                 this.handleError(response);
             return {
                 status: response.result,
+                data: response,
             };
         });
         this.refund = (data) => __awaiter(this, void 0, void 0, function* () {
@@ -124,6 +125,7 @@ class Payment extends config_1.Config {
                 this.handleError(response);
             return {
                 status: response.result,
+                data: response,
             };
         });
         this.creatPaymentHash = ({ referenceId, amount, currency }) => {

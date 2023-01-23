@@ -16,9 +16,11 @@ export declare class Payment extends Config {
      */
     check: (data: ICheckPaymentData) => Promise<{
         status: any;
+        data: any;
     }>;
     refund: (data: IRefundPaymentData) => Promise<{
         status: any;
+        data: any;
     }>;
     private creatPaymentHash;
 }
