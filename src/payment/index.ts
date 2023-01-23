@@ -1,5 +1,6 @@
-import { ConfigType, TransactionType } from "../types";
-import {
+import { TransactionType } from "../types";
+import type { ConfigType } from "../types";
+import type {
   ICreatePaymentData,
   ICreatePaymentRequest,
   ICheckPaymentData,
@@ -22,7 +23,15 @@ export class Payment extends Config {
    */
   public create = async (data: ICreatePaymentData) => {
     // create a payment here ...
-    const { redirectURL, referenceId, amount, customer } = data;
+    const {
+      redirectURL,
+      referenceId,
+      amount,
+      customer,
+      lang = "EN",
+      udf1,
+      udf4,
+    } = data;
     // create a hash for the payment
     const hash = this.creatPaymentHash({
       referenceId,
@@ -48,7 +57,10 @@ export class Payment extends Config {
       State: customer.state,
       Zip: customer.zip,
       Phoneno: customer.phone,
+      udf1: this.ParseOptionalMetadata(udf1),
       udf2: redirectURL,
+      udf3: lang,
+      udf4: this.ParseOptionalMetadata(udf4),
     };
 
     // call the api endpoint to return the redirect api.
@@ -61,9 +73,9 @@ export class Payment extends Config {
     console.log(response);
 
     return {
-      paymentId: response["payid"],
+      paymentId: response.payid,
       hash,
-      url: `${response["targetUrl"]}?paymentid=${response["payid"]}`,
+      url: `${response.targetUrl}?paymentid=${response.payid}`,
     };
   };
 

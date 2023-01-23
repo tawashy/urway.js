@@ -22,7 +22,7 @@ class Payment extends config_1.Config {
          */
         this.create = (data) => __awaiter(this, void 0, void 0, function* () {
             // create a payment here ...
-            const { redirectURL, referenceId, amount, customer } = data;
+            const { redirectURL, referenceId, amount, customer, lang = "EN", udf1, udf4, } = data;
             // create a hash for the payment
             const hash = this.creatPaymentHash({
                 referenceId,
@@ -48,7 +48,10 @@ class Payment extends config_1.Config {
                 State: customer.state,
                 Zip: customer.zip,
                 Phoneno: customer.phone,
+                udf1: this.ParseOptionalMetadata(udf1),
                 udf2: redirectURL,
+                udf3: lang,
+                udf4: this.ParseOptionalMetadata(udf4),
             };
             // call the api endpoint to return the redirect api.
             const response = yield (0, api_1.api)(this.url, payment);
@@ -58,9 +61,9 @@ class Payment extends config_1.Config {
                 this.handleError(response);
             console.log(response);
             return {
-                paymentId: response["payid"],
+                paymentId: response.payid,
                 hash,
-                url: `${response["targetUrl"]}?paymentid=${response["payid"]}`,
+                url: `${response.targetUrl}?paymentid=${response.payid}`,
             };
         });
         /**

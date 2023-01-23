@@ -8,6 +8,13 @@ const constants_1 = require("../utils/constants");
 const status_codes_json_1 = __importDefault(require("../utils/status-codes.json"));
 class Config {
     constructor(config) {
+        this.ParseOptionalMetadata = (metadata) => {
+            if (!metadata)
+                return "";
+            if (metadata.constructor === Object || metadata.constructor === Array)
+                metadata = JSON.stringify(metadata);
+            return metadata.replace(/"/g, "'");
+        };
         this.handleError = (response) => {
             const status = response.responseCode;
             let message = "unknown error, please check urway docs for more details";

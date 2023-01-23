@@ -15,6 +15,13 @@ export class Config {
     this.secret = config.secret;
   }
 
+  protected ParseOptionalMetadata = (metadata: any): string => {
+    if (!metadata) return "";
+    if (metadata.constructor === Object || metadata.constructor === Array)
+      metadata = JSON.stringify(metadata);
+    return metadata.replace(/"/g, "'");
+  };
+
   protected handleError = (response: any) => {
     const status = response.responseCode as keyof typeof ErrorMessages;
     let message = "unknown error, please check urway docs for more details";

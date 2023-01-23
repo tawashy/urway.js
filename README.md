@@ -50,6 +50,11 @@ const payment = new urway.payment.create({
     // Zip: "",                    // Optional field
     // Phoneno: "",                // Optional field
   },
+  // To determine the language of the payment page, you can use the following values: EN, AR (default is EN)
+  lang: "EN", // Optional field
+  // A parameter for you to keep any information corresponding to the transaction.
+  udf1: "", // Optional field
+  udf4: "", // Optional field
   // where your customer is going to be redirected after paying.
   redirectURL: "http://localhost:3000/callback",
 });

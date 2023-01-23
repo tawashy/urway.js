@@ -9,11 +9,15 @@ export interface Customer {
     state?: string;
     zip?: string;
 }
+type lang = "AR" | "EN";
 export interface ICreatePaymentData {
     referenceId: string;
     amount: string;
     customer: Customer;
     redirectURL: string;
+    lang?: lang;
+    udf1?: string;
+    udf4?: string;
 }
 export interface ICreatePaymentRequest {
     trackid: string;
@@ -33,7 +37,10 @@ export interface ICreatePaymentRequest {
     State?: string;
     Zip?: string;
     Phoneno?: string;
+    udf1?: string;
     udf2: string;
+    udf3: lang;
+    udf4?: string;
 }
 export interface ICheckPaymentData {
     paymentId: string;
@@ -70,3 +77,4 @@ export interface IRefundPaymentRequest {
     amount: string;
     requestHash: string;
 }
+export {};
