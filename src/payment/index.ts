@@ -11,6 +11,7 @@ import {
 import { createHash } from "crypto";
 import { api } from "../utils/api";
 import { Config } from "../config";
+import validateAmount from "../helper/validateAmount";
 
 export class Payment extends Config {
   constructor(config: ConfigType) {
@@ -22,7 +23,9 @@ export class Payment extends Config {
    */
   public create = async (data: ICreatePaymentData) => {
     // create a payment here ...
-    const { redirectURL, referenceId, amount, customer } = data;
+    const { redirectURL, referenceId, customer } = data;
+    let { amount } = data;
+    amount = validateAmount(amount);
     // create a hash for the payment
     const hash = this.creatPaymentHash({
       referenceId,
@@ -72,8 +75,9 @@ export class Payment extends Config {
    */
   public check = async (data: ICheckPaymentData) => {
     // check payment here ...
-    const { paymentId, referenceId, amount, hash } = data;
-
+    const { paymentId, referenceId, hash } = data;
+    let { amount } = data;
+    amount = validateAmount(amount);
     const payment: ICheckPaymentRequest = {
       transid: paymentId,
       trackid: referenceId,
@@ -100,7 +104,9 @@ export class Payment extends Config {
   };
 
   public refund = async (data: IRefundPaymentData) => {
-    const { paymentId, referenceId, amount, hash } = data;
+    const { paymentId, referenceId, hash } = data;
+    let { amount } = data;
+    amount = validateAmount(amount);
 
     const payment: IRefundPaymentRequest = {
       transid: paymentId,
