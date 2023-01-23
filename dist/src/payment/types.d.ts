@@ -11,7 +11,7 @@ export interface Customer {
 }
 export interface ICreatePaymentData {
     referenceId: string;
-    amount: string;
+    amount: string | number;
     customer: Customer;
     redirectURL: string;
 }
@@ -23,7 +23,7 @@ export interface ICreatePaymentRequest {
     merchantIp: string;
     country: "SA";
     currency: "SAR";
-    amount: string;
+    amount: string | number;
     requestHash: string;
     customerEmail: string;
     First_name?: string;
@@ -38,7 +38,7 @@ export interface ICreatePaymentRequest {
 export interface ICheckPaymentData {
     paymentId: string;
     referenceId: string;
-    amount: string;
+    amount: string | number;
     hash: string;
 }
 export interface ICheckPaymentRequest {
@@ -49,14 +49,14 @@ export interface ICheckPaymentRequest {
     currency: "SAR";
     password: string;
     action: TransactionType.Inquiry;
-    amount: string;
+    amount: string | number;
     requestHash: string;
     udf1: TransactionType;
 }
 export interface IRefundPaymentData {
     paymentId: string;
     referenceId: string;
-    amount: string;
+    amount: string | number;
     hash: string;
 }
 export interface IRefundPaymentRequest {
@@ -67,6 +67,6 @@ export interface IRefundPaymentRequest {
     currency: "SAR";
     password: string;
     action: TransactionType.Refund;
-    amount: string;
+    amount: string | number;
     requestHash: string;
 }
