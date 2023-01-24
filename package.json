@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "test": "echo \"No test specified\"",
-    "start:dev": "npx nodemon"
+    "start:dev": "npx nodemon",
+    "build": "tsc --outDir ./dist"
   },
   "author": "Yaser I. Tawash",
   "license": "MIT",
