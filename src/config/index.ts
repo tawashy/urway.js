@@ -26,7 +26,10 @@ export class Config {
     const status = response.responseCode as keyof typeof ErrorMessages;
     let message = "unknown error, please check urway docs for more details";
     if (ErrorMessages[status]) message = ErrorMessages[status];
-    console.log("RESP:", response);
-    throw new Error(`error code ${status}: - ${message}`);
+
+    const exception = new Error();
+    exception.name = status;
+    exception.message = message;
+    throw exception;
   };
 }
