@@ -37,7 +37,7 @@ Note: the mode parameter will simply switch between the Production and Testing U
 You can create a payment using the following:
 
 ```js
-const payment = new urway.payment.create({
+const payment = urway.payment.create({
   referenceId: "ORDER_ID", // trackid, in urway docs
   amount: "200.00",
   customer: {
