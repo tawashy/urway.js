@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Config = void 0;
 const constants_1 = require("../utils/constants");
 const status_codes_json_1 = __importDefault(require("../utils/status-codes.json"));
+const crypto_js_1 = require("crypto-js");
 class Config {
     constructor(config) {
         this.ParseOptionalMetadata = (metadata) => {
@@ -22,6 +23,13 @@ class Config {
                 message = status_codes_json_1.default[status];
             console.log("RESP:", response);
             throw new Error(`error code ${status}: - ${message}`);
+        };
+        this.validateResponseHash = (data) => {
+            const { TranId, ResponseCode, amount, hash } = data;
+            const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
+            const requestHash = (0, crypto_js_1.SHA256)(txn_details).toString();
+            if (requestHash !== hash)
+                throw new Error("Invalid Hash");
         };
         this.terminalId = config.terminalId;
         this.password = config.password;

@@ -12,8 +12,7 @@ function validateAmount(amount) {
         amount = Number(amount);
     if (isNaN(amount))
         throw new Error("Amount must be a number");
-    if (Number(amount) === amount && amount % 1 === 0)
-        amount = amount.toFixed(2);
+    amount = amount.toFixed(2);
     return String(amount);
 }
 exports.default = validateAmount;

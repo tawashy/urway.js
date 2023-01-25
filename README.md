@@ -99,6 +99,7 @@ this should return the following:
 ```js
 {
   status: "PENDING", // Initiated, or  Successful
+  data: response // response object includes urway actual response data   
 }
 ```
 
@@ -121,5 +122,6 @@ This should return the following:
 ```js
 {
   status: "Successful",
+  data: response // response object includes urway actual response data   
 }
 ```

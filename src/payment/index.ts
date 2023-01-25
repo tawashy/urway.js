@@ -9,7 +9,7 @@ import type {
   IRefundPaymentRequest,
 } from "./types";
 
-import { createHash } from "crypto";
+import { SHA256 } from "crypto-js";
 import { api } from "../utils/api";
 import { Config } from "../config";
 import validateAmount from "../helper/validateAmount";
@@ -163,17 +163,6 @@ export class Payment extends Config {
    */
   private creatPaymentHash = ({ referenceId, amount, currency }: any) => {
     const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
-    return createHash("sha256").update(txn_details).digest("hex");
-  };
-  /**
-   * @description Validates the response hash to ensure the response is valid and not tampered with.
-   * @param data The response data from the payment gateway.
-   * @returns void | Error
-   */
-  private validateResponseHash = (data: any) => {
-    const { TranId, ResponseCode, amount, hash } = data;
-    const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
-    const requestHash = createHash("sha256").update(txn_details).digest("hex");
-    if (requestHash !== hash) throw new Error("Invalid Hash");
+    return SHA256(txn_details).toString();
   };
 }
