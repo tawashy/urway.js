@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Payment = void 0;
 const types_1 = require("../types");
-const crypto_1 = require("crypto");
+const crypto_js_1 = require("crypto-js");
 const api_1 = require("../utils/api");
 const config_1 = require("../config");
 const validateAmount_1 = __importDefault(require("../helper/validateAmount"));
@@ -23,6 +23,8 @@ class Payment extends config_1.Config {
         super(config);
         /**
          * Create a new payment
+         * @param data The payment data.
+         * @returns  Promise<{ paymentId: string; hash: string; url: string; }>
          */
         this.create = (data) => __awaiter(this, void 0, void 0, function* () {
             // create a payment here ...
@@ -74,12 +76,15 @@ class Payment extends config_1.Config {
         });
         /**
          * Check the status of a current transaction
+         * @param data The payment data.
+         * @returns  Promise<{ status: string; }>
          */
         this.check = (data) => __awaiter(this, void 0, void 0, function* () {
             // check payment here ...
             const { paymentId, referenceId, hash } = data;
             let { amount } = data;
             amount = (0, validateAmount_1.default)(amount);
+            this.validateResponseHash(data);
             const payment = {
                 transid: paymentId,
                 trackid: referenceId,
@@ -102,6 +107,11 @@ class Payment extends config_1.Config {
                 data: response,
             };
         });
+        /**
+         *  Refund a payment transaction
+         * @param data The payment data.
+         * @returns  Promise<{ status: string; }>
+         */
         this.refund = (data) => __awaiter(this, void 0, void 0, function* () {
             const { paymentId, referenceId, hash } = data;
             let { amount } = data;
@@ -128,9 +138,26 @@ class Payment extends config_1.Config {
                 data: response,
             };
         });
+        /**
+         * @description Creates a hash for the payment request.
+         * @param data The payment data.
+         * @returns string
+         */
         this.creatPaymentHash = ({ referenceId, amount, currency }) => {
             const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
-            return (0, crypto_1.createHash)("sha256").update(txn_details).digest("hex");
+            return (0, crypto_js_1.SHA256)(txn_details).toString();
+        };
+        /**
+         * @description Validates the response hash to ensure the response is valid and not tampered with.
+         * @param data The response data from the payment gateway.
+         * @returns void | Error
+         */
+        this.validateResponseHash = (data) => {
+            const { TranId, ResponseCode, amount, hash } = data;
+            const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
+            const requestHash = (0, crypto_js_1.SHA256)(txn_details).toString();
+            if (requestHash !== hash)
+                throw new Error("Invalid Hash");
         };
     }
 }
