@@ -147,18 +147,6 @@ class Payment extends config_1.Config {
             const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
             return (0, crypto_js_1.SHA256)(txn_details).toString();
         };
-        /**
-         * @description Validates the response hash to ensure the response is valid and not tampered with.
-         * @param data The response data from the payment gateway.
-         * @returns void | Error
-         */
-        this.validateResponseHash = (data) => {
-            const { TranId, ResponseCode, amount, hash } = data;
-            const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
-            const requestHash = (0, crypto_js_1.SHA256)(txn_details).toString();
-            if (requestHash !== hash)
-                throw new Error("Invalid Hash");
-        };
     }
 }
 exports.Payment = Payment;

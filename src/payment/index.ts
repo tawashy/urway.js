@@ -165,15 +165,4 @@ export class Payment extends Config {
     const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
     return SHA256(txn_details).toString();
   };
-  /**
-   * @description Validates the response hash to ensure the response is valid and not tampered with.
-   * @param data The response data from the payment gateway.
-   * @returns void | Error
-   */
-  private validateResponseHash = (data: any) => {
-    const { TranId, ResponseCode, amount, hash } = data;
-    const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
-    const requestHash = SHA256(txn_details).toString();
-    if (requestHash !== hash) throw new Error("Invalid Hash");
-  };
 }

@@ -37,10 +37,4 @@ export declare class Payment extends Config {
      * @returns string
      */
     private creatPaymentHash;
-    /**
-     * @description Validates the response hash to ensure the response is valid and not tampered with.
-     * @param data The response data from the payment gateway.
-     * @returns void | Error
-     */
-    private validateResponseHash;
 }
