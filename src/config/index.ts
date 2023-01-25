@@ -27,9 +27,17 @@ export class Config {
     let message = "unknown error, please check urway docs for more details";
     if (ErrorMessages[status]) message = ErrorMessages[status];
 
-    const exception = new Error();
-    exception.name = status;
-    exception.message = message;
-    throw exception;
+    throw new UrwayError(message, Number(status));
   };
+}
+
+export class UrwayError extends Error {
+  status: number;
+  message: string;
+
+  constructor(message: string, status: number) {
+    super();
+    this.status = status;
+    this.message = message;
+  }
 }
