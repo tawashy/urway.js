@@ -23,7 +23,7 @@
   "scripts": {
     "test": "echo \"No test specified\"",
     "start:dev": "npx nodemon",
-    "build": "tsc --outDir ./dist"
+    "build": "tsc"
   },
   "author": "Yaser I. Tawash",
   "license": "MIT",
