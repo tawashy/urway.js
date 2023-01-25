@@ -118,6 +118,7 @@ export class Payment extends Config {
 
     return {
       status: response.result,
+      data: response,
     };
   };
   /**
@@ -152,6 +153,7 @@ export class Payment extends Config {
 
     return {
       status: response.result,
+      data: response,
     };
   };
   /**
