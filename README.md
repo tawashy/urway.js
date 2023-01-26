@@ -1,3 +1,6 @@
+# THIS IS AN UNCERTIFIED BRANCH OF URWAY.JS
+## DO NOT USE IN PRODUCTION
+
 # urway.js
 
 The URWAY.js library provides convenient access to the URWAY API from
