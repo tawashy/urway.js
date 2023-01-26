@@ -16,11 +16,21 @@ export class Config {
     this.secret = config.secret;
   }
 
-  protected ParseOptionalMetadata = (metadata: any): string => {
-    if (!metadata) return "";
-    if (metadata.constructor === Object || metadata.constructor === Array)
-      metadata = JSON.stringify(metadata);
-    return metadata.replace(/"/g, "'");
+  /**
+   * @description Shared method to create a payment hash or subscription hash
+   * @param data The payment data.
+   * @returns string
+   */
+  protected creatPaymentHash = ({ referenceId, amount, currency }: any) => {
+    const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
+    return SHA256(txn_details).toString();
+  };
+
+  protected validateResponseHash = (data: any) => {
+    const { TranId, ResponseCode, amount, hash } = data;
+    const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
+    const requestHash = SHA256(txn_details).toString();
+    if (requestHash !== hash) throw new Error("Invalid Hash");
   };
 
   protected handleError = (response: any) => {
@@ -31,10 +41,18 @@ export class Config {
     throw new Error(`error code ${status}: - ${message}`);
   };
 
-  protected validateResponseHash = (data: any) => {
-    const { TranId, ResponseCode, amount, hash } = data;
-    const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
-    const requestHash = SHA256(txn_details).toString();
-    if (requestHash !== hash) throw new Error("Invalid Hash");
+  protected CastAmount(amount: number | string): string {
+    if (!amount) throw new Error("Amount is required");
+    if (typeof amount === "string") amount = Number(amount);
+    if (isNaN(amount)) throw new Error("Amount must be a number");
+    amount = amount.toFixed(2);
+    return String(amount);
+  }
+
+  protected ParseOptionalMetadata = (metadata: any): string => {
+    if (!metadata) return "";
+    if (metadata.constructor === Object || metadata.constructor === Array)
+      metadata = JSON.stringify(metadata);
+    return metadata.replace(/"/g, "'");
   };
 }

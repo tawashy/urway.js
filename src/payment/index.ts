@@ -9,10 +9,8 @@ import type {
   IRefundPaymentRequest,
 } from "./types";
 
-import { SHA256 } from "crypto-js";
 import { api } from "../utils/api";
 import { Config } from "../config";
-import validateAmount from "../helper/validateAmount";
 
 export class Payment extends Config {
   constructor(config: ConfigType) {
@@ -35,7 +33,7 @@ export class Payment extends Config {
       udf4,
     } = data;
     let { amount } = data;
-    amount = validateAmount(amount);
+    amount = this.CastAmount(amount);
     // create a hash for the payment
     const hash = this.creatPaymentHash({
       referenceId,
@@ -92,7 +90,7 @@ export class Payment extends Config {
     // check payment here ...
     const { paymentId, referenceId, hash } = data;
     let { amount } = data;
-    amount = validateAmount(amount);
+    amount = this.CastAmount(amount);
 
     this.validateResponseHash(data);
 
@@ -129,7 +127,7 @@ export class Payment extends Config {
   public refund = async (data: IRefundPaymentData) => {
     const { paymentId, referenceId, hash } = data;
     let { amount } = data;
-    amount = validateAmount(amount);
+    amount = this.CastAmount(amount);
 
     const payment: IRefundPaymentRequest = {
       transid: paymentId,
@@ -155,14 +153,5 @@ export class Payment extends Config {
       status: response.result,
       data: response,
     };
-  };
-  /**
-   * @description Creates a hash for the payment request.
-   * @param data The payment data.
-   * @returns string
-   */
-  private creatPaymentHash = ({ referenceId, amount, currency }: any) => {
-    const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
-    return SHA256(txn_details).toString();
   };
 }
