@@ -1,7 +1,7 @@
 import { PRODUCTION_URL, TESTING_URL } from "../utils/constants";
 import { ConfigType } from "../types";
 import ErrorMessages from "../utils/status-codes.json";
-
+import { UrWayError } from "../utils/UrWayError";
 export class Config {
   protected terminalId: string;
   protected password: string;
@@ -27,17 +27,6 @@ export class Config {
     let message = "unknown error, please check urway docs for more details";
     if (ErrorMessages[status]) message = ErrorMessages[status];
 
-    throw new UrwayError(message, Number(status));
+    throw new UrWayError(status);
   };
-}
-
-export class UrwayError extends Error {
-  status: number;
-  message: string;
-
-  constructor(message: string, status: number) {
-    super();
-    this.status = status;
-    this.message = message;
-  }
 }
