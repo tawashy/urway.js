@@ -2,6 +2,9 @@ import { PRODUCTION_URL, TESTING_URL } from "../utils/constants";
 import { ConfigType } from "../types";
 import ErrorMessages from "../utils/status-codes.json";
 import { UrWayError } from "../utils/UrWayError";
+import { SHA256 } from "crypto-js";
+
+
 export class Config {
   protected terminalId: string;
   protected password: string;
@@ -28,5 +31,12 @@ export class Config {
     if (ErrorMessages[status]) message = ErrorMessages[status];
 
     throw new UrWayError(status);
+  };
+
+  protected validateResponseHash = (data: any) => {
+    const { TranId, ResponseCode, amount, hash } = data;
+    const txn_details = `${TranId}|${this.secret}|${ResponseCode}|${amount}`;
+    const requestHash = SHA256(txn_details).toString();
+    if (requestHash !== hash) throw new Error("Invalid Hash");
   };
 }

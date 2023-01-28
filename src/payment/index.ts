@@ -9,7 +9,7 @@ import type {
   IRefundPaymentRequest,
 } from "./types";
 
-import { createHash } from "crypto";
+import { SHA256 } from "crypto-js";
 import { api } from "../utils/api";
 import { Config } from "../config";
 import validateAmount from "../helper/validateAmount";
@@ -21,6 +21,8 @@ export class Payment extends Config {
 
   /**
    * Create a new payment
+   * @param data The payment data.
+   * @returns  Promise<{ paymentId: string; hash: string; url: string; }>
    */
   public create = async (data: ICreatePaymentData) => {
     // create a payment here ...
@@ -83,12 +85,17 @@ export class Payment extends Config {
 
   /**
    * Check the status of a current transaction
+   * @param data The payment data.
+   * @returns  Promise<{ status: string; }>
    */
   public check = async (data: ICheckPaymentData) => {
     // check payment here ...
     const { paymentId, referenceId, hash } = data;
     let { amount } = data;
     amount = validateAmount(amount);
+
+    this.validateResponseHash(data);
+
     const payment: ICheckPaymentRequest = {
       transid: paymentId,
       trackid: referenceId,
@@ -111,9 +118,14 @@ export class Payment extends Config {
 
     return {
       status: response.result,
+      data: response,
     };
   };
-
+  /**
+   *  Refund a payment transaction
+   * @param data The payment data.
+   * @returns  Promise<{ status: string; }>
+   */
   public refund = async (data: IRefundPaymentData) => {
     const { paymentId, referenceId, hash } = data;
     let { amount } = data;
@@ -141,11 +153,16 @@ export class Payment extends Config {
 
     return {
       status: response.result,
+      data: response,
     };
   };
-
+  /**
+   * @description Creates a hash for the payment request.
+   * @param data The payment data.
+   * @returns string
+   */
   private creatPaymentHash = ({ referenceId, amount, currency }: any) => {
     const txn_details = `${referenceId}|${this.terminalId}|${this.password}|${this.secret}|${amount}|${currency}`;
-    return createHash("sha256").update(txn_details).digest("hex");
+    return SHA256(txn_details).toString();
   };
 }
