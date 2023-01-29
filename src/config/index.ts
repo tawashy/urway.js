@@ -1,7 +1,9 @@
 import { PRODUCTION_URL, TESTING_URL } from "../utils/constants";
 import { ConfigType } from "../types";
 import ErrorMessages from "../utils/status-codes.json";
+import { UrWayError } from "../utils/UrWayError";
 import { SHA256 } from "crypto-js";
+
 
 export class Config {
   protected terminalId: string;
@@ -27,8 +29,8 @@ export class Config {
     const status = response.responseCode as keyof typeof ErrorMessages;
     let message = "unknown error, please check urway docs for more details";
     if (ErrorMessages[status]) message = ErrorMessages[status];
-    console.log("RESP:", response);
-    throw new Error(`error code ${status}: - ${message}`);
+
+    throw new UrWayError(status);
   };
 
   protected validateResponseHash = (data: any) => {
