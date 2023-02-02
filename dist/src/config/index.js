@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Config = void 0;
 const constants_1 = require("../utils/constants");
 const status_codes_json_1 = __importDefault(require("../utils/status-codes.json"));
+const UrWayError_1 = require("../utils/UrWayError");
 const crypto_js_1 = require("crypto-js");
 class Config {
     constructor(config) {
@@ -21,8 +22,7 @@ class Config {
             let message = "unknown error, please check urway docs for more details";
             if (status_codes_json_1.default[status])
                 message = status_codes_json_1.default[status];
-            console.log("RESP:", response);
-            throw new Error(`error code ${status}: - ${message}`);
+            throw new UrWayError_1.UrWayError({ status, message });
         };
         this.validateResponseHash = (data) => {
             const { TranId, ResponseCode, amount, hash } = data;
