@@ -63,11 +63,10 @@ class Payment extends config_1.Config {
             };
             // call the api endpoint to return the redirect api.
             const response = yield (0, api_1.api)(this.url, payment);
-            const isFailure = response.result === "Failure";
+            const isFailure = response.result === "Failure" || response.result === "UnSuccessful";
             // if there was an error throw the error
             if (isFailure)
                 this.handleError(response);
-            console.log(response);
             return {
                 paymentId: response.payid,
                 hash,
