@@ -1,8 +1,13 @@
+interface UrWayErrorInput {
+  status: string;
+  message: string;
+}
+
 export class UrWayError extends Error {
   status: string;
-  constructor(status: string) {
-    super(); // (1)
+  constructor({ status, message }: UrWayErrorInput) {
+    super();
     this.status = status;
-    this.message = this.message;
+    this.message = message;
   }
 }

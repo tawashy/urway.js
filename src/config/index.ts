@@ -4,7 +4,6 @@ import ErrorMessages from "../utils/status-codes.json";
 import { UrWayError } from "../utils/UrWayError";
 import { SHA256 } from "crypto-js";
 
-
 export class Config {
   protected terminalId: string;
   protected password: string;
@@ -30,7 +29,7 @@ export class Config {
     let message = "unknown error, please check urway docs for more details";
     if (ErrorMessages[status]) message = ErrorMessages[status];
 
-    throw new UrWayError(status);
+    throw new UrWayError({ status, message });
   };
 
   protected validateResponseHash = (data: any) => {
